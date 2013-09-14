@@ -2,4 +2,4 @@
 xcuserdata
 *.xcworkspace
 xcshareddata
-bin
+*.app
