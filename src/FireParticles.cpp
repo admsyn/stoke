@@ -11,6 +11,17 @@
 
 const size_t MAX_VERTS = 8192 * 32;
 
+const float MAX_PARTICLE_SIZE = 20;
+const float MIN_PARTICLE_SIZE = 6;
+
+const float MIN_DAMPEN = 0.91;
+const float MAX_DAMPEN = 0.97;
+
+const float FADE_SPEED = 0.95;
+
+const float IMPULSE_AMOUNT = 20;
+const float IMPULSE_FREQUENCY = 0.68;
+
 FireParticles::FireParticles()
 : _hasSetup(false)
 , _particleVelocity(0, 0.5)
@@ -18,6 +29,7 @@ FireParticles::FireParticles()
 	_verts.reserve(MAX_VERTS);
 	_vels.reserve(MAX_VERTS);
 	_colors.reserve(MAX_VERTS);
+	_dampens.reserve(MAX_VERTS);
 	
 	particleQueue = dispatch_queue_create("relay.particles", DISPATCH_QUEUE_SERIAL);
 }
@@ -45,7 +57,7 @@ void FireParticles::setup() {
 		vector<float> blankPointSize;
 		
 		for(size_t i = 0; i < MAX_VERTS; i++) {
-			blankPointSize.push_back(ofRandom(6, 27));
+			blankPointSize.push_back(ofRandom(MIN_PARTICLE_SIZE, MAX_PARTICLE_SIZE));
 		}
 		
 		int pointSizeAttribute = _particleShader.getAttributeLocation("pointSize");
@@ -105,18 +117,18 @@ void FireParticles::update() {
 	removeDeadParticles();
 }
 
+#pragma mark - Particle Lifecycle
+
 void FireParticles::addParticles(size_t particlesToAdd) {
 	
 	// every once in a while, create an extra burst of particles
 	float impulse = ofNoise(_particleNoiseIndex);
-	bool doImpulse = impulse > 0.65;
+	bool doImpulse = impulse > IMPULSE_FREQUENCY;
 	if(doImpulse) {
-		impulse *= 40. * _particleVelocity.y;
+		impulse *= IMPULSE_AMOUNT * _particleVelocity.y;
 	}
 	
 	for(int i = 0; i < particlesToAdd; i++) {
-		_verts.push_back(ofVec2f(ofRandom(1280), ofRandom(770, 810)));
-		
 		float verticalVelocity = ofRandom(5  * _particleVelocity.y,
 										  40 * _particleVelocity.y);
 		
@@ -129,32 +141,33 @@ void FireParticles::addParticles(size_t particlesToAdd) {
 		if(doImpulse && !(rand() % 2)) {
 			verticalVelocity += ofRandom(impulse);
 			particleColor.r  = 1.0;
-			particleColor.g += 0.1;
-			particleColor.b += 0.05;
+			particleColor.g += 0.2;
+			particleColor.b += 0.15;
 		}
 		
+		_verts.push_back(ofVec2f(ofRandom(1280), ofRandom(770, 810)));
 		_vels.push_back(ofVec2f(_particleVelocity.x * 20. + ofRandomf() * 3, -verticalVelocity));
 		_colors.push_back(particleColor);
+		_dampens.push_back(ofVec2f(0.9, ofRandom(MIN_DAMPEN, MAX_DAMPEN)));
 	}
 }
 
 void FireParticles::updatePositions() {
 	const size_t count = MIN(_verts.size(), _vels.size()) * 2;
-	const float dampen = 0.93;
-	const float fadeout = 0.95;
 	
 	float * verts = (float *)&_verts[0];
-	float * vels  = (float *)&_vels[0];
-	float * cols  = (float *)&_colors[0];
+	float * vels = (float *)&_vels[0];
+	float * cols = (float *)&_colors[0];
+	float * damp = (float *)&_dampens[0];
 	
 	// add the velocities to the vertices
 	vDSP_vadd(verts, 1, vels, 1, verts, 1, count);
 	
 	// dampen the velocities
-	vDSP_vsmul(vels, 1, &dampen, vels, 1, count);
+	vDSP_vmul(vels, 1, damp, 1, vels, 1, count);
 	
 	// fade out the colours
-	vDSP_vsmul(cols, 1, &fadeout, cols, 1, _colors.size() * 4);
+	vDSP_vsmul(cols, 1, &FADE_SPEED, cols, 1, _colors.size() * 4);
 }
 
 void FireParticles::removeDeadParticles() {
@@ -171,8 +184,11 @@ void FireParticles::removeDeadParticles() {
 		_verts.erase(_verts.begin(), _verts.begin() + vertsToRemove);
 		_vels.erase(_vels.begin(), _vels.begin() + vertsToRemove);
 		_colors.erase(_colors.begin(), _colors.begin() + vertsToRemove);
+		_dampens.erase(_dampens.begin(), _dampens.begin() + vertsToRemove);
 	}
 }
+
+#pragma mark - Setters
 
 void FireParticles::setVelocity(ofVec2f velocity) {
 	dispatch_sync(particleQueue, ^{

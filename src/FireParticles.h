@@ -32,6 +32,7 @@ protected:
 	vector<ofVec2f> _verts;
 	vector<ofVec2f> _vels;
 	vector<ofFloatColor> _colors;
+	vector<ofVec2f> _dampens;
 
 	ofTexture _particleTex;
 	ofShader _particleShader;
