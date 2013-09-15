@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ofVbo.h"
+#include "ofTexture.h"
 #include "ofVec2f.h"
-#include "ofImage.h"
 #include "ofShader.h"
 #include <vector>
 
@@ -14,13 +14,14 @@ public:
 	
 	void setup();
 	void draw();
+	void shutdown();
 	
-	void setVelocity(ofVec2f velocity);
+	void setIntensity(ofVec2f intensity);
 	void addImpulse();
 
-protected:
+private:
 	
-	dispatch_queue_t particleQueue;
+	dispatch_queue_t _particleQueue;
 	
 	void update();
 	void addParticles(size_t particlesToAdd);
@@ -39,7 +40,7 @@ protected:
 	ofTexture _particleTex;
 	ofShader _particleShader;
 	
-	ofVec2f _particleVelocity;
+	ofVec2f _particleIntensity;
 	float _particleNoiseIndex;
 	
 	bool _hasSetup;

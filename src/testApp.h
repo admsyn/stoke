@@ -1,14 +1,16 @@
 #pragma once
 
 #include "ofMain.h"
+
 #include "FireParticles.h"
 
-class testApp : public ofBaseApp{
+class testApp : public ofBaseApp {
 	
 public:
 	void setup();
 	void update();
 	void draw();
+	void exit();
 	
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -20,7 +22,7 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	
-	FireParticles fire;
+	FireParticles fireParticles;
 	
 	float impulseIndex;
 	

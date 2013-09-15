@@ -7,8 +7,12 @@ void testApp::setup(){
 	ofEnablePointSprites();
 	ofClear(0);
 	
-	fire.setup();
+	fireParticles.setup();
 	bgColor = mouseColor = ofColor(0);
+}
+
+void testApp::exit() {
+	fireParticles.shutdown();
 }
 
 //--------------------------------------------------------------
@@ -16,7 +20,7 @@ void testApp::update(){
 	impulseIndex += 0.1;
 	
 	if(ofNoise(impulseIndex) > 0.68) {
-		fire.addImpulse();
+		fireParticles.addImpulse();
 	}
 	
 	// a bit of background flicker
@@ -31,10 +35,9 @@ void testApp::update(){
 void testApp::draw(){
 	ofBackground(bgColor);
 	
-	glDepthMask(GL_FALSE);
 	ofSetColor(255);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	fire.draw();
+	fireParticles.draw();
 }
 
 //--------------------------------------------------------------
@@ -57,7 +60,7 @@ void testApp::mouseMoved(int x, int y ){
 						 ofMap(intensity.y, 0.1, 1, 10, 30, true),
 						 ofMap(intensity.y, 0.1, 1, 40,  0, true));
 	
-	fire.setVelocity(intensity);
+	fireParticles.setIntensity(intensity);
 }
 
 //--------------------------------------------------------------
