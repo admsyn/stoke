@@ -8,15 +8,29 @@ void testApp::setup(){
 	ofClear(0);
 	
 	fire.setup();
+	bgColor = mouseColor = ofColor(0);
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+	impulseIndex += 0.1;
+	
+	if(ofNoise(impulseIndex) > 0.68) {
+		fire.addImpulse();
+	}
+	
+	// a bit of background flicker
+	float flickerAmount = ofNoise(impulseIndex) * 7. * intensity.y;
+	bgColor.r += flickerAmount;
+	bgColor.g += flickerAmount * 0.5;
+	
+	bgColor.lerp(mouseColor, 0.15);
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	ofBackground(bgColor);
+	
 	glDepthMask(GL_FALSE);
 	ofSetColor(255);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -36,14 +50,14 @@ void testApp::keyReleased(int key){
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
 	
-	ofVec2f amount(ofMap(x, 0, ofGetWidth(), -1, 1, true),
-				   ofMap(y, 0, ofGetHeight(), 1, 0.1, true));
+	intensity = ofVec2f(ofMap(x, 0, ofGetWidth(), -1, 1, true),
+						ofMap(y, 0, ofGetHeight(), 1, 0.1, true));
 	
-	ofBackground(amount.y * 100,
-				 ofMap(amount.y, 0, 1, 10, 50, true),
-				 ofMap(amount.y, 0, 1, 40, 0, true));
+	mouseColor = ofColor(ofMap(intensity.y, 0.1, 1, 0,  50, true),
+						 ofMap(intensity.y, 0.1, 1, 10, 30, true),
+						 ofMap(intensity.y, 0.1, 1, 40,  0, true));
 	
-	fire.setVelocity(amount);
+	fire.setVelocity(intensity);
 }
 
 //--------------------------------------------------------------

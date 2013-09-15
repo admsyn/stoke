@@ -20,10 +20,10 @@ const float MAX_DAMPEN = 0.97;
 const float FADE_SPEED = 0.95;
 
 const float IMPULSE_AMOUNT = 20;
-const float IMPULSE_FREQUENCY = 0.68;
 
 FireParticles::FireParticles()
 : _hasSetup(false)
+, _doImpulse(false)
 , _particleVelocity(0, 0.5)
 , _particleNoiseIndex(0) {
 	_verts.reserve(MAX_VERTS);
@@ -121,13 +121,6 @@ void FireParticles::update() {
 
 void FireParticles::addParticles(size_t particlesToAdd) {
 	
-	// every once in a while, create an extra burst of particles
-	float impulse = ofNoise(_particleNoiseIndex);
-	bool doImpulse = impulse > IMPULSE_FREQUENCY;
-	if(doImpulse) {
-		impulse *= IMPULSE_AMOUNT * _particleVelocity.y;
-	}
-	
 	for(int i = 0; i < particlesToAdd; i++) {
 		float verticalVelocity = ofRandom(5  * _particleVelocity.y,
 										  40 * _particleVelocity.y);
@@ -138,7 +131,8 @@ void FireParticles::addParticles(size_t particlesToAdd) {
 								   ofRandom(_particleVelocity.y * 0.6));
 		
 		// apply the impulse to roughly 1/2 of the particles
-		if(doImpulse && !(rand() % 2)) {
+		if(_doImpulse && !(rand() % 2)) {
+			float impulse = ofNoise(_particleNoiseIndex) * IMPULSE_AMOUNT * _particleVelocity.y;
 			verticalVelocity += ofRandom(impulse);
 			particleColor.r  = 1.0;
 			particleColor.g += 0.2;
@@ -150,6 +144,8 @@ void FireParticles::addParticles(size_t particlesToAdd) {
 		_colors.push_back(particleColor);
 		_dampens.push_back(ofVec2f(0.9, ofRandom(MIN_DAMPEN, MAX_DAMPEN)));
 	}
+	
+	_doImpulse = false;
 }
 
 void FireParticles::updatePositions() {
@@ -191,7 +187,13 @@ void FireParticles::removeDeadParticles() {
 #pragma mark - Setters
 
 void FireParticles::setVelocity(ofVec2f velocity) {
-	dispatch_sync(particleQueue, ^{
+	dispatch_async(particleQueue, ^{
 		_particleVelocity = velocity;
+	});
+}
+
+void FireParticles::addImpulse() {
+	dispatch_async(particleQueue, ^{
+		_doImpulse = true;
 	});
 }

@@ -21,4 +21,10 @@ public:
 	void gotMessage(ofMessage msg);
 	
 	FireParticles fire;
+	
+	float impulseIndex;
+	
+	ofColor bgColor;
+	ofColor mouseColor;
+	ofVec2f intensity;
 };

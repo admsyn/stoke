@@ -14,7 +14,9 @@ public:
 	
 	void setup();
 	void draw();
+	
 	void setVelocity(ofVec2f velocity);
+	void addImpulse();
 
 protected:
 	
@@ -41,4 +43,5 @@ protected:
 	float _particleNoiseIndex;
 	
 	bool _hasSetup;
+	bool _doImpulse;
 };
