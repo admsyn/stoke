@@ -7,7 +7,7 @@ void testApp::setup(){
 	ofEnablePointSprites();
 	ofClear(0);
 	
-	fireParticles.setup();
+	fireParticles.setup(ofVec2f(ofGetWidth(), ofGetHeight()));
 	bgColor = mouseColor = ofColor(0);
 }
 
@@ -80,7 +80,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-
+	fireParticles.setWindowSize(ofVec2f(ofGetWidth(), ofGetHeight()));
 }
 
 //--------------------------------------------------------------

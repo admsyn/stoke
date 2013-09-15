@@ -12,11 +12,12 @@ public:
 	FireParticles();
 	~FireParticles();
 	
-	void setup();
+	void setup(ofVec2f windowSize);
 	void draw();
 	void shutdown();
 	
 	void setIntensity(ofVec2f intensity);
+	void setWindowSize(ofVec2f windowSize);
 	void addImpulse();
 
 private:
@@ -25,8 +26,9 @@ private:
 	
 	void update();
 	void addParticles(size_t particlesToAdd);
+	void updateParticleData();
 	void removeDeadParticles();
-	void updatePositions();
+	void clearParticles();
 	
 	dispatch_source_t _particleTimer;
 	
@@ -40,9 +42,10 @@ private:
 	ofTexture _particleTex;
 	ofShader _particleShader;
 	
+	ofVec2f _windowSize;
 	ofVec2f _particleIntensity;
 	float _particleNoiseIndex;
 	
-	bool _hasSetup;
+	bool _isRunning;
 	bool _doImpulse;
 };
