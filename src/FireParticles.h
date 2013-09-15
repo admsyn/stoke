@@ -10,17 +10,20 @@ class FireParticles {
 public:
 	
 	FireParticles();
-	virtual ~FireParticles();
+	~FireParticles();
 	
-	virtual void setup();
-	virtual void draw();
-	virtual void setVelocity(ofVec2f velocity);
+	void setup();
+	void draw();
+	void setVelocity(ofVec2f velocity);
 
 protected:
 	
 	dispatch_queue_t particleQueue;
 	
-	virtual void update();
+	void update();
+	void addParticles(size_t particlesToAdd);
+	void removeDeadParticles();
+	void updatePositions();
 	
 	dispatch_source_t _particleTimer;
 	
@@ -32,7 +35,9 @@ protected:
 
 	ofTexture _particleTex;
 	ofShader _particleShader;
+	
 	ofVec2f _particleVelocity;
+	float _particleNoiseIndex;
 	
 	bool _hasSetup;
 };

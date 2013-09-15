@@ -17,7 +17,6 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	glPointSize(12);
 	glDepthMask(GL_FALSE);
 	ofSetColor(255);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
