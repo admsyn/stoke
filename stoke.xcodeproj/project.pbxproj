@@ -7,9 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		666FE76617EBD4BA000CABC1 /* spooky-shader.frag in Sources */ = {isa = PBXBuildFile; fileRef = 666FE76417EBD4BA000CABC1 /* spooky-shader.frag */; };
+		666FE76717EBD4BA000CABC1 /* spooky-shader.vert in Sources */ = {isa = PBXBuildFile; fileRef = 666FE76517EBD4BA000CABC1 /* spooky-shader.vert */; };
+		66A947FA17EBB1A600AC14D8 /* RtMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947D817EBB1A600AC14D8 /* RtMidi.cpp */; };
+		66A947FB17EBB1A600AC14D8 /* ofxRtMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947DC17EBB1A600AC14D8 /* ofxRtMidiIn.cpp */; };
+		66A947FC17EBB1A600AC14D8 /* ofxRtMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947DE17EBB1A600AC14D8 /* ofxRtMidiOut.cpp */; };
+		66A9480217EBB1A600AC14D8 /* ofxBaseMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947EB17EBB1A600AC14D8 /* ofxBaseMidi.cpp */; };
+		66A9480317EBB1A600AC14D8 /* ofxMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947ED17EBB1A600AC14D8 /* ofxMidi.cpp */; };
+		66A9480417EBB1A600AC14D8 /* ofxMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947F017EBB1A600AC14D8 /* ofxMidiIn.cpp */; };
+		66A9480517EBB1A600AC14D8 /* ofxMidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947F217EBB1A600AC14D8 /* ofxMidiMessage.cpp */; };
+		66A9480617EBB1A600AC14D8 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66A947F417EBB1A600AC14D8 /* ofxMidiOut.cpp */; };
+		66A9480917EBB1EA00AC14D8 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A9480817EBB1EA00AC14D8 /* CoreMIDI.framework */; };
 		66D07D2017E4CEB800BDF32B /* FireParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66D07D1E17E4CEB800BDF32B /* FireParticles.cpp */; };
-		66D07D2517E4F7DB00BDF32B /* shader.frag in Sources */ = {isa = PBXBuildFile; fileRef = 66D07D2317E4F7DB00BDF32B /* shader.frag */; };
-		66D07D2617E4F7DB00BDF32B /* shader.vert in Sources */ = {isa = PBXBuildFile; fileRef = 66D07D2417E4F7DB00BDF32B /* shader.vert */; };
+		66D07D2517E4F7DB00BDF32B /* fire-shader.frag in Sources */ = {isa = PBXBuildFile; fileRef = 66D07D2317E4F7DB00BDF32B /* fire-shader.frag */; };
+		66D07D2617E4F7DB00BDF32B /* fire-shader.vert in Sources */ = {isa = PBXBuildFile; fileRef = 66D07D2417E4F7DB00BDF32B /* fire-shader.vert */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -63,10 +74,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		666FE76417EBD4BA000CABC1 /* spooky-shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = "spooky-shader.frag"; sourceTree = "<group>"; };
+		666FE76517EBD4BA000CABC1 /* spooky-shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = "spooky-shader.vert"; sourceTree = "<group>"; };
+		66A947D717EBB1A600AC14D8 /* RtError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtError.h; sourceTree = "<group>"; };
+		66A947D817EBB1A600AC14D8 /* RtMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RtMidi.cpp; sourceTree = "<group>"; };
+		66A947D917EBB1A600AC14D8 /* RtMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtMidi.h; sourceTree = "<group>"; };
+		66A947DC17EBB1A600AC14D8 /* ofxRtMidiIn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRtMidiIn.cpp; sourceTree = "<group>"; };
+		66A947DD17EBB1A600AC14D8 /* ofxRtMidiIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxRtMidiIn.h; sourceTree = "<group>"; };
+		66A947DE17EBB1A600AC14D8 /* ofxRtMidiOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxRtMidiOut.cpp; sourceTree = "<group>"; };
+		66A947DF17EBB1A600AC14D8 /* ofxRtMidiOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxRtMidiOut.h; sourceTree = "<group>"; };
+		66A947EB17EBB1A600AC14D8 /* ofxBaseMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseMidi.cpp; sourceTree = "<group>"; };
+		66A947EC17EBB1A600AC14D8 /* ofxBaseMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBaseMidi.h; sourceTree = "<group>"; };
+		66A947ED17EBB1A600AC14D8 /* ofxMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidi.cpp; sourceTree = "<group>"; };
+		66A947EE17EBB1A600AC14D8 /* ofxMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidi.h; sourceTree = "<group>"; };
+		66A947EF17EBB1A600AC14D8 /* ofxMidiConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiConstants.h; sourceTree = "<group>"; };
+		66A947F017EBB1A600AC14D8 /* ofxMidiIn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiIn.cpp; sourceTree = "<group>"; };
+		66A947F117EBB1A600AC14D8 /* ofxMidiIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiIn.h; sourceTree = "<group>"; };
+		66A947F217EBB1A600AC14D8 /* ofxMidiMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiMessage.cpp; sourceTree = "<group>"; };
+		66A947F317EBB1A600AC14D8 /* ofxMidiMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiMessage.h; sourceTree = "<group>"; };
+		66A947F417EBB1A600AC14D8 /* ofxMidiOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiOut.cpp; sourceTree = "<group>"; };
+		66A947F517EBB1A600AC14D8 /* ofxMidiOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiOut.h; sourceTree = "<group>"; };
+		66A947F617EBB1A600AC14D8 /* ofxMidiTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiTypes.h; sourceTree = "<group>"; };
+		66A9480817EBB1EA00AC14D8 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		66D07D1E17E4CEB800BDF32B /* FireParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FireParticles.cpp; sourceTree = "<group>"; };
 		66D07D1F17E4CEB800BDF32B /* FireParticles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FireParticles.h; sourceTree = "<group>"; };
-		66D07D2317E4F7DB00BDF32B /* shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.frag; sourceTree = "<group>"; };
-		66D07D2417E4F7DB00BDF32B /* shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.vert; sourceTree = "<group>"; };
+		66D07D2317E4F7DB00BDF32B /* fire-shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = "fire-shader.frag"; sourceTree = "<group>"; };
+		66D07D2417E4F7DB00BDF32B /* fire-shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = "fire-shader.vert"; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -98,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66A9480917EBB1EA00AC14D8 /* CoreMIDI.framework in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
@@ -121,11 +155,73 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		66A947CA17EBB1A600AC14D8 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				66A947D517EBB1A600AC14D8 /* rtmidi */,
+			);
+			name = libs;
+			path = ../../../addons/ofxMidi/libs;
+			sourceTree = "<group>";
+		};
+		66A947D517EBB1A600AC14D8 /* rtmidi */ = {
+			isa = PBXGroup;
+			children = (
+				66A947D717EBB1A600AC14D8 /* RtError.h */,
+				66A947D817EBB1A600AC14D8 /* RtMidi.cpp */,
+				66A947D917EBB1A600AC14D8 /* RtMidi.h */,
+			);
+			path = rtmidi;
+			sourceTree = "<group>";
+		};
+		66A947DA17EBB1A600AC14D8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				66A947DB17EBB1A600AC14D8 /* desktop */,
+				66A947EB17EBB1A600AC14D8 /* ofxBaseMidi.cpp */,
+				66A947EC17EBB1A600AC14D8 /* ofxBaseMidi.h */,
+				66A947ED17EBB1A600AC14D8 /* ofxMidi.cpp */,
+				66A947EE17EBB1A600AC14D8 /* ofxMidi.h */,
+				66A947EF17EBB1A600AC14D8 /* ofxMidiConstants.h */,
+				66A947F017EBB1A600AC14D8 /* ofxMidiIn.cpp */,
+				66A947F117EBB1A600AC14D8 /* ofxMidiIn.h */,
+				66A947F217EBB1A600AC14D8 /* ofxMidiMessage.cpp */,
+				66A947F317EBB1A600AC14D8 /* ofxMidiMessage.h */,
+				66A947F417EBB1A600AC14D8 /* ofxMidiOut.cpp */,
+				66A947F517EBB1A600AC14D8 /* ofxMidiOut.h */,
+				66A947F617EBB1A600AC14D8 /* ofxMidiTypes.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxMidi/src;
+			sourceTree = "<group>";
+		};
+		66A947DB17EBB1A600AC14D8 /* desktop */ = {
+			isa = PBXGroup;
+			children = (
+				66A947DC17EBB1A600AC14D8 /* ofxRtMidiIn.cpp */,
+				66A947DD17EBB1A600AC14D8 /* ofxRtMidiIn.h */,
+				66A947DE17EBB1A600AC14D8 /* ofxRtMidiOut.cpp */,
+				66A947DF17EBB1A600AC14D8 /* ofxRtMidiOut.h */,
+			);
+			path = desktop;
+			sourceTree = "<group>";
+		};
+		66A9480717EBB1CB00AC14D8 /* ofxMidi */ = {
+			isa = PBXGroup;
+			children = (
+				66A947CA17EBB1A600AC14D8 /* libs */,
+				66A947DA17EBB1A600AC14D8 /* src */,
+			);
+			name = ofxMidi;
+			sourceTree = "<group>";
+		};
 		66D07D2217E4F7DB00BDF32B /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				66D07D2317E4F7DB00BDF32B /* shader.frag */,
-				66D07D2417E4F7DB00BDF32B /* shader.vert */,
+				666FE76417EBD4BA000CABC1 /* spooky-shader.frag */,
+				666FE76517EBD4BA000CABC1 /* spooky-shader.vert */,
+				66D07D2317E4F7DB00BDF32B /* fire-shader.frag */,
+				66D07D2417E4F7DB00BDF32B /* fire-shader.vert */,
 			);
 			name = shaders;
 			path = bin/data/shaders;
@@ -134,6 +230,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				66A9480717EBB1CB00AC14D8 /* ofxMidi */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -141,6 +238,7 @@
 		BBAB23C913894ECA00AA2426 /* system frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66A9480817EBB1EA00AC14D8 /* CoreMIDI.framework */,
 				E7F985F515E0DE99003869B5 /* Accelerate.framework */,
 				E4C2424410CC5A17004149E2 /* AppKit.framework */,
 				E4C2424510CC5A17004149E2 /* Cocoa.framework */,
@@ -307,11 +405,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66A947FC17EBB1A600AC14D8 /* ofxRtMidiOut.cpp in Sources */,
+				66A947FB17EBB1A600AC14D8 /* ofxRtMidiIn.cpp in Sources */,
+				66A9480517EBB1A600AC14D8 /* ofxMidiMessage.cpp in Sources */,
+				66A947FA17EBB1A600AC14D8 /* RtMidi.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				66A9480217EBB1A600AC14D8 /* ofxBaseMidi.cpp in Sources */,
+				66A9480617EBB1A600AC14D8 /* ofxMidiOut.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
+				66A9480317EBB1A600AC14D8 /* ofxMidi.cpp in Sources */,
+				666FE76717EBD4BA000CABC1 /* spooky-shader.vert in Sources */,
+				66A9480417EBB1A600AC14D8 /* ofxMidiIn.cpp in Sources */,
+				666FE76617EBD4BA000CABC1 /* spooky-shader.frag in Sources */,
 				66D07D2017E4CEB800BDF32B /* FireParticles.cpp in Sources */,
-				66D07D2517E4F7DB00BDF32B /* shader.frag in Sources */,
-				66D07D2617E4F7DB00BDF32B /* shader.vert in Sources */,
+				66D07D2517E4F7DB00BDF32B /* fire-shader.frag in Sources */,
+				66D07D2617E4F7DB00BDF32B /* fire-shader.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

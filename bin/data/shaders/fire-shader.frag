@@ -1,4 +1,3 @@
-
 uniform sampler2D tex;
 
 void main (void) {

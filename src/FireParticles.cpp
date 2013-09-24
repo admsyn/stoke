@@ -14,9 +14,9 @@ const float FADE_SPEED = 0.95;
 const float IMPULSE_AMOUNT = 20;
 
 // these pairs are (min, max)
-const pair<float, float> P_SIZE(6, 20); // particle size
-const pair<size_t, size_t> P_RATE(128, 1800); // particle addition rate
-const pair<float, float> DAMP_RATE(0.91, 0.97); // velocity dampening (vel *= damp every update)
+const pair<float, float> P_SIZE(4, 13); // particle size
+const pair<size_t, size_t> P_RATE(128, 2200); // particle addition rate
+const pair<float, float> DAMP_RATE(0.90, 0.97); // velocity dampening (vel *= damp every update)
 
 FireParticles::FireParticles()
 : _isRunning(false)
@@ -42,7 +42,7 @@ void FireParticles::setup(ofVec2f windowSize) {
 	// load texture and shader
 	ofDisableArbTex();
 	ofLoadImage(_particleTex, "dot.png");
-	_particleShader.load("shaders/shader");
+	_particleShader.load("shaders/fire-shader");
 	
 	// fill vbo with dummy values
 	vector<ofVec2f> blankVerts = vector<ofVec2f>(MAX_PARTICLES);
