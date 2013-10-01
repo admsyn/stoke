@@ -2,6 +2,23 @@
 
 const size_t SPOOKY_VERTS = 5500;
 
+enum AbletonControls {
+	kSpookyVol = 1,
+	kFireIntensity,
+	kFireA,
+	kFireB,
+	kFireC,
+	kFireD
+};
+
+float avg(const vector<float> &v) {
+	float avg = 0;
+	for(size_t i = 0; i < v.size(); ++i) {
+		avg += v[i];
+	}
+	return avg / (float)v.size();
+}
+
 //--------------------------------------------------------------
 void testApp::setup(){
 	midiOut.openVirtualPort("Stoke MIDI");
@@ -11,7 +28,13 @@ void testApp::setup(){
 	ofEnablePointSprites();
 	ofClear(0);
 	
-	fireParticles.setup(ofVec2f(ofGetWidth(), ofGetHeight()));
+	fireParticles.resize(4);
+	for(size_t i = 0; i < fireParticles.size(); ++i) {
+		fireParticles[i].setup(1 / (float)fireParticles.size());
+	}
+	setupParticleRects();
+	intensity.resize(fireParticles.size());
+	
 	bgColor = mouseColor = ofColor(0);
 	
 	for(int i = 0; i < SPOOKY_VERTS; i++) {
@@ -40,15 +63,42 @@ void testApp::setup(){
 }
 
 void testApp::exit() {
-	fireParticles.shutdown();
+	for(size_t i = 0; i < fireParticles.size(); ++i) {
+		fireParticles[i].shutdown();
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	impulseIndex += 0.1;
 	
+	size_t targetColumn = ofMap(intensityVector.x, -1, 1, 0, fireParticles.size());
+	for(size_t i = 0; i < intensity.size(); ++i) {
+		float columnTarget = i == targetColumn ? intensityVector.y : 0;
+		
+		if(intensity[i] < columnTarget) {
+			intensity[i] = ofLerp(intensity[i], columnTarget, 0.5);
+		} else {
+			intensity[i] = ofLerp(intensity[i], columnTarget, 0.01);
+		}
+	}
+	
+	float totalIntensity = avg(intensity);
+	
+	mouseColor = ofColor(ofMap(totalIntensity, 0, 1, 0,  50, true),
+						 ofMap(totalIntensity, 0, 1, 10, 30, true),
+						 ofMap(totalIntensity, 0, 1, 50,  0, true));
+
 	if(ofNoise(impulseIndex) > 0.68) {
-		fireParticles.addImpulse();
+		for(size_t i = 0; i < fireParticles.size(); ++i) {
+			fireParticles[i].addImpulse();
+		}
+	}
+	
+	
+	for(size_t i = 0; i < fireParticles.size(); ++i) {
+		fireParticles[i].setIntensity(ofVec2f(ofSignedNoise(impulseIndex * 0.1, i),
+											  intensity[i]));
 	}
 	
 	if(showSpooky()) {
@@ -59,28 +109,36 @@ void testApp::update(){
 		spookyVbo.updateVertexData(&spookyVerts[0], spookyVerts.size());
 	}
 	
-	if(spookyVisibility > intensity.y) {
-		spookyVisibility = ofLerp(spookyVisibility, intensity.y, 0.005);
+	if(spookyVisibility > totalIntensity) {
+		spookyVisibility = ofLerp(spookyVisibility, totalIntensity, 0.005);
 	} else {
-		spookyVisibility = intensity.y;
+		spookyVisibility = totalIntensity;
 	}
 	
 	// a bit of background flicker
-	float flickerAmount = ofNoise(impulseIndex) * 7. * intensity.y;
+	float flickerAmount = ofNoise(impulseIndex) * 7. * totalIntensity;
 	bgColor.r += flickerAmount;
 	bgColor.g += flickerAmount * 0.5;
 	bgColor.lerp(mouseColor, 0.15);
+	
+	// update MIDI
+	midiOut.sendControlChange(1, kFireIntensity, totalIntensity * 127);
+	midiOut.sendControlChange(1, kFireA, intensity[0] * 127);
+	midiOut.sendControlChange(1, kFireB, intensity[1] * 127);
+	midiOut.sendControlChange(1, kFireC, intensity[2] * 127);
+	midiOut.sendControlChange(1, kFireD, intensity[3] * 127);
+	midiOut.sendControlChange(1, kSpookyVol, ofMap(spookyVisibility, 1.25, 0, 0, 127, true));
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofBackground(bgColor);
+	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	
 	if(showSpooky()) {
 		spookyShader.begin();
-//		spookyShader.setUniform1f("visibility", ofMap(intensity.y, 0.4, 0.1, 0, 0.7, true));
-		spookyShader.setUniform1f("visibility", ofMap(spookyVisibility, 0.4, 0.1, 0, 0.7, true));
+		spookyShader.setUniform1f("visibility", ofMap(spookyVisibility, 0.25, 0, 0, 0.7, true));
 		spookyShader.setUniform1f("colorMod", ofNoise(impulseIndex * 0.1) * 0.5);
 		spookyTex.bind();
 		{
@@ -92,13 +150,15 @@ void testApp::draw(){
 	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofSetColor(255);
-	fireParticles.draw();
+	for(size_t i = 0; i < fireParticles.size(); ++i) {
+		fireParticles[i].draw();
+	}
 	
 	ofEnableAlphaBlending();
 	ofDrawBitmapStringHighlight(ofToString((int)ofGetFrameRate()), 10, 15);
 }
 
-bool testApp::showSpooky(){return intensity.y < 0.45;}
+bool testApp::showSpooky(){return avg(intensity) < 0.25;}
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
@@ -112,15 +172,8 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-	intensity = ofVec2f(ofMap(x, 0, ofGetWidth(), -1, 1, true),
-						ofMap(y, 0, ofGetHeight(), 1, 0.1, true));
-	
-	mouseColor = ofColor(ofMap(intensity.y, 0.1, 1, 0,  50, true),
-						 ofMap(intensity.y, 0.1, 1, 10, 30, true),
-						 ofMap(intensity.y, 0.1, 1, 50,  0, true));
-	
-	fireParticles.setIntensity(intensity);
-	midiOut.sendControlChange(1, 1, ofMap(y, 0, ofGetHeight(), 0, 127, true));
+	intensityVector = ofVec2f(ofMap(x, 0, ofGetWidth(), -1, 1, true),
+							  ofMap(y, 0, ofGetHeight(), 1, 0, true));
 }
 
 //--------------------------------------------------------------
@@ -138,9 +191,17 @@ void testApp::mouseReleased(int x, int y, int button){
 
 }
 
+void testApp::setupParticleRects() {
+	float gridWidth = ofGetWidth() / (float)fireParticles.size();
+	for(size_t i = 0; i < fireParticles.size(); ++i) {
+		ofRectangle rect(i * gridWidth, 0, gridWidth, ofGetHeight());
+		fireParticles[i].setRect(rect);
+	}
+}
+
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	fireParticles.setWindowSize(ofVec2f(ofGetWidth(), ofGetHeight()));
+	setupParticleRects();
 }
 
 //--------------------------------------------------------------

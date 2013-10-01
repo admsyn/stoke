@@ -12,17 +12,18 @@ public:
 	FireParticles();
 	~FireParticles();
 	
-	void setup(ofVec2f windowSize);
+	void setup(float particlePercentage); // particlePercentage = multiplier for global particle rate
 	void draw();
 	void shutdown();
 	
 	void setIntensity(ofVec2f intensity);
-	void setWindowSize(ofVec2f windowSize);
+	// rectangle particles will appear in
+	void setRect(ofRectangle rect);
 	void addImpulse();
 
 private:
 	
-	dispatch_queue_t _particleQueue;
+	static dispatch_queue_t _particleQueue();
 	
 	void update();
 	void addParticles(size_t particlesToAdd);
@@ -42,10 +43,13 @@ private:
 	ofTexture _particleTex;
 	ofShader _particleShader;
 	
-	ofVec2f _windowSize;
+	ofRectangle _rect;
 	ofVec2f _particleIntensity;
 	float _particleNoiseIndex;
 	
 	bool _isRunning;
 	bool _doImpulse;
+	
+	size_t MAX_PARTICLES;
+	pair<size_t, size_t> P_RATE;
 };

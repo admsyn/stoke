@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxMidi.h"
+#include "ofxCv.h"
 #include "FireParticles.h"
 
 class testApp : public ofBaseApp {
@@ -22,15 +23,17 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	bool showSpooky();
+	void setupParticleRects();
 	
-	FireParticles fireParticles;
+	vector<FireParticles> fireParticles;
 	ofxMidiOut midiOut;
 	
 	float impulseIndex;
+	vector<float> intensity;
 	
 	ofColor bgColor;
 	ofColor mouseColor;
-	ofVec2f intensity;
+	ofVec2f intensityVector;
 	
 	ofVbo spookyVbo;
 	ofShader spookyShader;

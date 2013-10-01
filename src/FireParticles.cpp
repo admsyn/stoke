@@ -9,35 +9,48 @@
 #include "ofImage.h"
 #include <Accelerate/Accelerate.h>
 
-const size_t MAX_PARTICLES = 8192 * 32;
+//const size_t MAX_PARTICLES = (8192 * 32);
 const float FADE_SPEED = 0.95;
 const float IMPULSE_AMOUNT = 20;
 
 // these pairs are (min, max)
 const pair<float, float> P_SIZE(4, 13); // particle size
-const pair<size_t, size_t> P_RATE(128, 2200); // particle addition rate
+//const pair<size_t, size_t> P_RATE(128, 2200); // particle addition rate
 const pair<float, float> DAMP_RATE(0.90, 0.97); // velocity dampening (vel *= damp every update)
+
+dispatch_queue_t FireParticles::_particleQueue() {
+	static dispatch_once_t onceToken;
+	static dispatch_queue_t queue = NULL;
+	
+	dispatch_once(&onceToken, ^{
+		queue = dispatch_queue_create("stoke.particles", DISPATCH_QUEUE_SERIAL);
+	});
+	
+	return queue;
+}
 
 FireParticles::FireParticles()
 : _isRunning(false)
 , _doImpulse(false)
 , _particleIntensity(0, 0.5)
-, _particleNoiseIndex(0)
-, _particleQueue(dispatch_queue_create("stoke.particles", DISPATCH_QUEUE_SERIAL)){
-	_verts.reserve(MAX_PARTICLES);
-	_vels.reserve(MAX_PARTICLES);
-	_colors.reserve(MAX_PARTICLES);
-	_dampens.reserve(MAX_PARTICLES);
+, _particleNoiseIndex(0) {
+	const size_t initReserve = 16384;
+	_verts.reserve(initReserve);
+	_vels.reserve(initReserve);
+	_colors.reserve(initReserve);
+	_dampens.reserve(initReserve);
 }
 
 FireParticles::~FireParticles() {
 	shutdown();
-	dispatch_release(_particleQueue);
 }
 
-void FireParticles::setup(ofVec2f windowSize) {
+void FireParticles::setup(float particlePercentage) {
 	
-	_windowSize = windowSize;
+	_rect = ofRectangle();
+	
+	MAX_PARTICLES = (8192 * 32) * particlePercentage;
+	P_RATE = pair<size_t, size_t>(128 * particlePercentage, 1600 * particlePercentage);//2200 * particlePercentage);
 	
 	// load texture and shader
 	ofDisableArbTex();
@@ -65,11 +78,11 @@ void FireParticles::setup(ofVec2f windowSize) {
 	_particleShader.end();
 	
 	// start update timer
-	_particleTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _particleQueue);
+	_particleTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _particleQueue());
 	
 	if(_particleTimer) {
 		const dispatch_time_t interval = 30 * NSEC_PER_MSEC;
-		const dispatch_time_t leeway = 5 * NSEC_PER_MSEC;
+		const dispatch_time_t leeway = 7 * NSEC_PER_MSEC;
 		dispatch_source_set_timer(_particleTimer, dispatch_walltime(NULL, 0), interval, leeway);
 		dispatch_source_set_event_handler(_particleTimer, ^{update();});
 		dispatch_resume(_particleTimer);
@@ -83,7 +96,7 @@ void FireParticles::shutdown() {
 	if(_isRunning) {
 		// wait for any updating to finish before returning
 		// this prevents a possible crash on exit
-		dispatch_sync(_particleQueue, ^{dispatch_suspend(_particleTimer);});
+		dispatch_sync(_particleQueue(), ^{dispatch_suspend(_particleTimer);});
 		_isRunning = false;
 	}
 }
@@ -121,7 +134,7 @@ void FireParticles::update() {
 void FireParticles::draw() {
 	__block size_t vertsToDraw = 0;
 	
-	dispatch_sync(_particleQueue, ^{
+	dispatch_sync(_particleQueue(), ^{
 		vertsToDraw = UpdateVbo(_particleVbo, _verts, _colors);
 	});
 	
@@ -142,8 +155,8 @@ void FireParticles::addParticles(size_t particlesToAdd) {
 	float impulse = ofNoise(_particleNoiseIndex) * IMPULSE_AMOUNT * _particleIntensity.y;
 	
 	for(int i = 0; i < particlesToAdd; i++) {
-		float verticalVelocity = ofRandom(5  * _particleIntensity.y,
-										  40 * _particleIntensity.y);
+		float verticalVelocity = ofRandom(7  * _particleIntensity.y,
+										  45 * _particleIntensity.y);
 		
 		ofFloatColor particleColor(ofRandom(0.7, 1.0),
 								   ofRandom(0.1, 0.1 + colorNoise * 0.3),
@@ -158,8 +171,10 @@ void FireParticles::addParticles(size_t particlesToAdd) {
 			particleColor.b += 0.15;
 		}
 		
-		_verts.push_back(ofVec2f(ofRandom(_windowSize.x), ofRandom(_windowSize.y, _windowSize.y + 35.)));
-		_vels.push_back(ofVec2f(_particleIntensity.x * 50. + ofRandomf() * 3, -verticalVelocity));
+		_verts.push_back(ofVec2f(ofRandom(_rect.width) + _rect.x,
+								 ofRandom(_rect.height, _rect.height + 35.)));
+		
+		_vels.push_back(ofVec2f(_particleIntensity.x * 3. + ofRandomf() * 3, -verticalVelocity));
 		_colors.push_back(particleColor);
 		_dampens.push_back(ofVec2f(0.9, ofRandom(DAMP_RATE.first, DAMP_RATE.second)));
 	}
@@ -212,21 +227,21 @@ void FireParticles::clearParticles() {
 
 #pragma mark - Setters
 
-void FireParticles::setWindowSize(ofVec2f windowSize) {
-	dispatch_async(_particleQueue, ^{
+void FireParticles::setRect(ofRectangle rect) {
+	dispatch_async(_particleQueue(), ^{
 		clearParticles();
-		_windowSize = windowSize;
+		_rect = rect;
 	});
 }
 
 void FireParticles::setIntensity(ofVec2f intensity) {
-	dispatch_async(_particleQueue, ^{
+	dispatch_async(_particleQueue(), ^{
 		_particleIntensity = intensity;
 	});
 }
 
 void FireParticles::addImpulse() {
-	dispatch_async(_particleQueue, ^{
+	dispatch_async(_particleQueue(), ^{
 		_doImpulse = true;
 	});
 }
